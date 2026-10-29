@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { bairrosPorZona, bairroPath, zonasPrioritarias } from '../data/bairros';
+import { breadcrumbSchema } from '../data/schema';
+
+const crumbs = [
+  { name: 'Início', path: '/' },
+  { name: 'Áreas atendidas', path: '/areas-atendidas/' },
+];
+---
+
+<Base
+  title={`Áreas Atendidas em Fortaleza | ${site.name}`}
+  description={`Conserto de geladeira, freezer e câmara fria 24 horas na Zona Leste, Centro, Zona Oeste e Zona Sul de Fortaleza. Chegamos em até ${site.arrivalMinutes} minutos.`}
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <section class="hero page-hero">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <span class="eyebrow">Áreas atendidas</span>
+      <h1>Conserto de geladeira em Fortaleza</h1>
+      <p class="hero-lead">Atendemos 24 horas, a domicílio, nos bairros abaixo. Encontre o seu.</p>
+      <CtaButtons />
+    </div>
+  </section>
+  <section class="section section-soft">
+    <div class="container zones">
+      {
+        bairrosPorZona().map((g) => (
+          <div class:list={['zone', { 'is-priority': zonasPrioritarias.includes(g.zona) }]}>
+            <h2 style="font-size:1.6rem">
+              {g.zona}
+              {zonasPrioritarias.includes(g.zona) && <span class="tag">Foco</span>}
+            </h2>
+            <ul>
+              {g.bairros.map((b) => (
+                <li>
+                  <a href={bairroPath(b)}>
+                    <Icon name="pin" size={16} /> {b.nome}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <CtaBand />
+</Base>

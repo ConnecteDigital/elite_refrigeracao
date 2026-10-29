@@ -1,0 +1,69 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { site } from '../../data/site';
+import { getServico } from '../../data/servicos';
+import { breadcrumbSchema } from '../../data/schema';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const path = `/blog/${post.id}/`;
+const servico = post.data.servico ? getServico(post.data.servico) : undefined;
+const crumbs = [
+  { name: 'Início', path: '/' },
+  { name: 'Blog', path: '/blog/' },
+  { name: post.data.titulo, path },
+];
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.titulo,
+  description: post.data.descricao,
+  datePublished: post.data.data.toISOString(),
+  mainEntityOfPage: new URL(path, site.url).href,
+  author: { '@type': 'Organization', name: site.name },
+  publisher: { '@id': `${site.url}/#empresa` },
+};
+---
+
+<Base
+  title={`${post.data.titulo} | ${site.name}`}
+  description={post.data.descricao}
+  ogType="article"
+  schema={[article, breadcrumbSchema(crumbs)]}
+>
+  <section class="hero page-hero">
+    <div class="container article">
+      <Breadcrumbs items={crumbs} />
+      <time datetime={post.data.data.toISOString()} style="color:#9fb7dd">{post.data.data.toLocaleDateString('pt-BR')}</time>
+      <h1 style="text-transform:none">{post.data.titulo}</h1>
+      <p class="hero-lead">{post.data.descricao}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container article">
+      <div class="prose"><Content /></div>
+      <div class="side-card" style="margin-top:40px">
+        <h2>Precisa de ajuda agora?</h2>
+        <p>
+          {servico ? <>Conheça nosso serviço de <a href={`/servicos/${servico.slug}/`} style="color:var(--yellow)">{servico.nome.toLowerCase()}</a>. </> : null}
+          Atendemos 24 horas em Fortaleza e chegamos em até {site.arrivalMinutes} minutos.
+        </p>
+        <CtaButtons size="md" />
+      </div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>

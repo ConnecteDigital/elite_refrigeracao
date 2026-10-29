@@ -1,0 +1,307 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import CtaBand from '../components/CtaBand.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FaqList from '../components/FaqList.astro';
+import Icon from '../components/Icon.astro';
+import IntroVideo from '../components/IntroVideo.astro';
+import { Image } from 'astro:assets';
+import { fotoDoServico } from '../data/fotos';
+import { site } from '../data/site';
+import { servicos } from '../data/servicos';
+import { bairrosPorZona, bairroPath, zonasPrioritarias } from '../data/bairros';
+import { faqSchema } from '../data/schema';
+import { getCollection } from 'astro:content';
+
+const faq = [
+  {
+    q: 'O atendimento é 24 horas mesmo?',
+    a: 'Sim. Atendemos 24 horas por dia, 7 dias por semana, incluindo fins de semana e feriados, em Fortaleza.',
+  },
+  {
+    q: 'Em quanto tempo o técnico chega?',
+    a: `Nossa equipe chega em até ${site.arrivalMinutes} minutos nos bairros atendidos.`,
+  },
+  {
+    q: 'A visita é cobrada?',
+    a: 'Não. A visita é gratuita: o técnico vai até você e faz o diagnóstico do aparelho.',
+  },
+  {
+    q: 'Os serviços têm garantia?',
+    a: `Sim. Todos os serviços da ${site.name} têm ${site.warrantyDays} dias de garantia.`,
+  },
+  {
+    q: 'Vocês consertam ar-condicionado?',
+    a: 'Não. Somos especialistas em geladeira, freezer e câmara fria, para casas e comércios.',
+  },
+  {
+    q: 'Quais marcas vocês atendem?',
+    a: 'Brastemp, Consul, Electrolux, GE, Bosch, Mabe, LG e Samsung, entre outras.',
+  },
+  {
+    q: 'Quais as formas de pagamento?',
+    a: 'Aceitamos todas as formas de pagamento.',
+  },
+];
+
+const marcas = ['Brastemp', 'Consul', 'Electrolux', 'GE', 'Bosch', 'Mabe', 'LG', 'Samsung'];
+const fotoEquipe = fotoDoServico('equipe');
+const fotosReais = [
+  { foto: fotoEquipe, legenda: 'Equipe Elite' },
+  { foto: fotoDoServico('conserto-de-geladeira'), legenda: 'Conserto de geladeira', href: '/servicos/conserto-de-geladeira/' },
+  { foto: fotoDoServico('troca-de-compressor'), legenda: 'Troca de compressor', href: '/servicos/troca-de-compressor/' },
+].filter((f) => f.foto);
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.data.getTime() - a.data.data.getTime())
+  .slice(0, 3);
+---
+
+<Base
+  title={`Conserto de Geladeira 24h em Fortaleza | Chegamos em ${site.arrivalMinutes} min | ${site.name}`}
+  description={site.description}
+  schema={[faqSchema(faq)]}
+>
+  <script slot="head" is:inline>
+    // Decide antes da primeira pintura se a abertura vai rodar
+    (function () {
+      try {
+        if (sessionStorage.getItem('introVista')) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var root = document.documentElement;
+        root.classList.add('intro-on');
+        // trava de segurança: se a abertura não começar, o site aparece
+        setTimeout(function () {
+          if (!root.classList.contains('intro-ready')) root.classList.remove('intro-on');
+        }, 8000);
+      } catch (e) {}
+    })();
+  </script>
+  <IntroVideo slot="top" />
+  <section class="hero hero-home">
+    {
+      fotoEquipe && (
+        <Image
+          class="hero-bg"
+          src={fotoEquipe.src}
+          alt=""
+          widths={[480, 800, 1200, 1600]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )
+    }
+    <div class="container hero-center">
+      <span class="eyebrow">Geladeira · Freezer · Câmara fria · Plantão 24h</span>
+      <h1>Conserto de geladeira 24h em Fortaleza: <em>chegamos em até {site.arrivalMinutes} minutos</em></h1>
+      <p class="hero-lead">Geladeira, freezer ou câmara fria parou de gelar? A gente resolve hoje, com visita grátis e {site.warrantyDays} dias de garantia.</p>
+      <CtaButtons />
+      <ul class="hero-badges">
+        <li><Icon name="clock" size={22} /> <span>Atendimento 24h</span></li>
+        <li><Icon name="bolt" size={22} /> <span>Chegada em até {site.arrivalMinutes} min</span></li>
+        <li><Icon name="gift" size={22} /> <span>Visita grátis</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="trust" aria-label="Diferenciais">
+    <div class="container trust-grid">
+      <div class="trust-item"><Icon name="clock" size={34} /><div><strong>24 horas</strong><span>Todos os dias, inclusive feriados</span></div></div>
+      <div class="trust-item"><Icon name="bolt" size={34} /><div><strong>{site.arrivalMinutes} minutos</strong><span>Tempo de chegada</span></div></div>
+      <div class="trust-item"><Icon name="shield" size={34} /><div><strong>{site.warrantyDays} dias</strong><span>De garantia no serviço</span></div></div>
+      <div class="trust-item"><Icon name="medal" size={34} /><div><strong>{site.yearsExperience} anos</strong><span>De experiência em Fortaleza</span></div></div>
+    </div>
+  </section>
+
+  <section class="section section-soft" id="servicos">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Nossos serviços</span>
+        <h2>Refrigeração em Fortaleza, para casa e comércio</h2>
+        <p>Geladeira de uma e duas portas, freezer horizontal e vertical e câmara fria. Do termostato à troca do compressor.</p>
+      </div>
+      <div class="services-grid">
+        {servicos.map((s) => <ServiceCard servico={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Como funciona</span>
+        <h2>Do chamado à geladeira gelando</h2>
+        <p>Sem enrolação: você chama, a gente chega e resolve.</p>
+      </div>
+      <div class="steps">
+        <div class="step-card">
+          <h3>Chame no WhatsApp ou ligue</h3>
+          <p>Conte o que está acontecendo. Se puder, mande uma foto ou um vídeo da geladeira ou do freezer.</p>
+        </div>
+        <div class="step-card">
+          <h3>Chegamos em até {site.arrivalMinutes} minutos</h3>
+          <p>Um técnico sai na hora para o endereço. A visita para avaliar o defeito é grátis.</p>
+        </div>
+        <div class="step-card">
+          <h3>Conserto com {site.warrantyDays} dias de garantia</h3>
+          <p>Fazemos o reparo, testamos tudo funcionando e você paga como preferir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container about-grid">
+      {
+        fotoEquipe && (
+          <div class="about-photo">
+            <Image src={fotoEquipe.src} alt={fotoEquipe.alt} widths={[400, 600, 800]} sizes="(max-width: 900px) 100vw, 460px" />
+          </div>
+        )
+      }
+      <div>
+        <div class="section-head">
+          <span class="eyebrow">Por que a {site.name}</span>
+          <h2>Técnicos de refrigeração de confiança, a qualquer hora</h2>
+          <p>Equipe própria, uniformizada e equipada com manifold, bomba de vácuo e solda para resolver geladeira, freezer e câmara fria no local.</p>
+        </div>
+        <div class="features">
+          <div class="feature">
+            <Icon name="clock" size={30} />
+            <div><h3>Plantão 24 horas</h3><p>Geladeira não escolhe hora para parar. Atendemos de madrugada, fins de semana e feriados.</p></div>
+          </div>
+          <div class="feature">
+            <Icon name="bolt" size={30} />
+            <div><h3>Chegamos em {site.arrivalMinutes} minutos</h3><p>Quanto antes o técnico chega, menos comida e mercadoria você perde.</p></div>
+          </div>
+          <div class="feature">
+            <Icon name="gift" size={30} />
+            <div><h3>Visita grátis</h3><p>O técnico vai até você e faz o diagnóstico sem cobrar a visita.</p></div>
+          </div>
+          <div class="feature">
+            <Icon name="shield" size={30} />
+            <div><h3>{site.warrantyDays} dias de garantia</h3><p>Todo serviço sai com garantia. Se algo der errado, voltamos para resolver.</p></div>
+          </div>
+          <div class="feature">
+            <Icon name="medal" size={30} />
+            <div><h3>{site.yearsExperience} anos de experiência</h3><p>Uma década consertando geladeiras, freezers e câmaras frias em Fortaleza.</p></div>
+          </div>
+          <div class="feature">
+            <Icon name="card" size={30} />
+            <div><h3>Todas as formas de pagamento</h3><p>Pague do jeito que for melhor para você.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Trabalhos realizados</span>
+        <h2>Nossa equipe em ação</h2>
+        <p>Fotos reais de atendimentos da {site.name} em Fortaleza.</p>
+      </div>
+      <div class="real-photos">
+        {
+          fotosReais.map(({ foto, legenda, href }) => (
+            <figure>
+              {href ? (
+                <a href={href}>
+                  <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 480px" />
+                  <figcaption>{legenda}</figcaption>
+                </a>
+              ) : (
+                <>
+                  <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 560px" />
+                  <figcaption>{legenda}</figcaption>
+                </>
+              )}
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-head" style="margin-inline:auto;text-align:center">
+        <span class="eyebrow">Marcas que atendemos</span>
+        <h2>Todas as principais marcas</h2>
+      </div>
+      <ul class="marcas">
+        {marcas.map((m) => <li>{m}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="areas">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Áreas atendidas</span>
+        <h2>Técnico de geladeira perto de você</h2>
+        <p>Atendemos a domicílio em Fortaleza, nos bairros abaixo.</p>
+      </div>
+      <div class="zones">
+        {
+          bairrosPorZona().map((g) => (
+            <div class:list={['zone', { 'is-priority': zonasPrioritarias.includes(g.zona) }]}>
+              <h3>
+                {g.zona}
+                {zonasPrioritarias.includes(g.zona) && <span class="tag">Foco</span>}
+              </h3>
+              <ul>
+                {g.bairros.map((b) => (
+                  <li>
+                    <a href={bairroPath(b)}>
+                      <Icon name="pin" size={16} /> {b.nome}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="section section-soft">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">Blog</span>
+            <h2>Dicas de geladeira e freezer</h2>
+          </div>
+          <div class="posts">
+            {posts.map((p) => (
+              <a class="post-card" href={`/blog/${p.id}/`}>
+                <time datetime={p.data.data.toISOString()}>{p.data.data.toLocaleDateString('pt-BR')}</time>
+                <h3>{p.data.titulo}</h3>
+                <p>{p.data.descricao}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="container" style="max-width: 860px">
+      <div class="section-head">
+        <span class="eyebrow">Dúvidas frequentes</span>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <FaqList items={faq} />
+    </div>
+  </section>
+
+  <CtaBand title="Geladeira parada agora?" />
+</Base>

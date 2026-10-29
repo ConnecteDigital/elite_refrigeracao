@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import Icon from './Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+import { servicos } from '../data/servicos';
+import { bairros, bairroPath } from '../data/bairros';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <Image src={logo} alt={site.name} width={280} />
+      <p>Conserto de geladeira, freezer e câmara fria 24 horas em Fortaleza. Chegada em até {site.arrivalMinutes} minutos, visita grátis e {site.warrantyDays} dias de garantia.</p>
+      <ul class="footer-contact">
+        <li><a href={whatsappUrl()} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> WhatsApp</a></li>
+        <li><a href={site.tel}><Icon name="phone" size={18} /> {site.phoneDisplay}</a></li>
+        <li><Icon name="clock" size={18} /> Aberto 24 horas, todos os dias</li>
+        <li><Icon name="pin" size={18} /> Atendimento a domicílio em Fortaleza</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer-title">Serviços</h2>
+      <ul class="footer-links">
+        {servicos.map((s) => <li><a href={`/servicos/${s.slug}/`}>{s.nome}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer-title">Conserto de geladeira por bairro</h2>
+      <ul class="footer-links footer-bairros">
+        {bairros.map((b) => <li><a href={bairroPath(b)}>{b.nome}</a></li>)}
+      </ul>
+      <h2 class="footer-title">Conteúdo</h2>
+      <ul class="footer-links">
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/areas-atendidas/">Áreas atendidas</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {year} {site.name}. Todos os direitos reservados.</p>
+  </div>
+</footer>

@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import { servicos } from '../data/servicos';
+import { fotoDoServico } from '../data/fotos';
+
+interface Props {
+  limit?: number;
+  exclude?: string;
+}
+
+const { limit, exclude } = Astro.props;
+const itens = servicos
+  .filter((s) => s.slug !== exclude)
+  .map((s) => ({ servico: s, foto: fotoDoServico(s.slug) }))
+  .filter((i) => i.foto)
+  .slice(0, limit);
+---
+
+<div class="gallery">
+  {
+    itens.map(({ servico, foto }) => (
+      <a class="gallery-item" href={`/servicos/${servico.slug}/`}>
+        <Image src={foto!.src} alt={foto!.alt} widths={[300, 450, 600]} sizes="(max-width: 700px) 50vw, 280px" />
+        <span>{servico.nome}</span>
+      </a>
+    ))
+  }
+</div>

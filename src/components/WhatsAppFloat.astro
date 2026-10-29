@@ -1,0 +1,13 @@
+---
+import Icon from './Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+---
+
+<div class="float-cta">
+  <a class="float-call" href={site.tel} aria-label="Ligar agora">
+    <Icon name="phone" size={22} /> <span>Ligar</span>
+  </a>
+  <a class="float-wa" href={whatsappUrl()} target="_blank" rel="noopener" aria-label="Chamar no WhatsApp">
+    <Icon name="whatsapp" size={30} /> <span>WhatsApp</span>
+  </a>
+</div>

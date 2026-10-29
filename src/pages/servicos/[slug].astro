@@ -1,0 +1,133 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaButtons from '../../components/CtaButtons.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import FaqList from '../../components/FaqList.astro';
+import Icon from '../../components/Icon.astro';
+import Gallery from '../../components/Gallery.astro';
+import { Image } from 'astro:assets';
+import { fotoDoServico } from '../../data/fotos';
+import { site } from '../../data/site';
+import { servicos, type Servico } from '../../data/servicos';
+import { bairros, bairroPath } from '../../data/bairros';
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../../data/schema';
+
+export function getStaticPaths() {
+  return servicos.map((servico) => ({ params: { slug: servico.slug }, props: { servico } }));
+}
+
+interface Props {
+  servico: Servico;
+}
+
+const { servico } = Astro.props;
+const crumbs = [
+  { name: 'Início', path: '/' },
+  { name: 'Serviços', path: '/servicos/' },
+  { name: servico.nome, path: `/servicos/${servico.slug}/` },
+];
+const faq = [
+  ...servico.faq,
+  {
+    q: 'Quanto tempo o técnico demora para chegar?',
+    a: `Atendemos 24 horas e chegamos em até ${site.arrivalMinutes} minutos nos bairros atendidos de Fortaleza.`,
+  },
+  {
+    q: 'Quais formas de pagamento vocês aceitam?',
+    a: 'Aceitamos todas as formas de pagamento.',
+  },
+];
+const foto = fotoDoServico(servico.slug);
+const outros = servicos.filter((s) => s.slug !== servico.slug).slice(0, 8);
+const msg = `Olá! Vim pelo site da ${site.name} e preciso de ${servico.nome.toLowerCase()}.`;
+---
+
+<Base
+  title={`${servico.nome} 24h em Fortaleza | ${site.name}`}
+  description={servico.metaDescription}
+  schema={[serviceSchema(servico), faqSchema(faq), breadcrumbSchema(crumbs)]}
+>
+  <section class="hero page-hero">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <span class="eyebrow">Serviço 24 horas em Fortaleza</span>
+      <h1>{servico.keyword}</h1>
+      <p class="hero-lead">{servico.resumo} Atendimento 24h, chegada em até {site.arrivalMinutes} minutos, visita grátis e {site.warrantyDays} dias de garantia.</p>
+      <CtaButtons message={msg} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content-grid">
+      <article class="prose">
+        {servico.intro.map((p) => <p>{p}</p>)}
+
+        {
+          foto && (
+            <figure class="service-figure">
+              <Image src={foto.src} alt={foto.alt} widths={[480, 800, 1100]} sizes="(max-width: 960px) 100vw, 760px" />
+              <figcaption>{servico.nome}: atendimento da {site.name} em Fortaleza.</figcaption>
+            </figure>
+          )
+        }
+
+        <h2>Quando chamar um técnico</h2>
+        <ul>{servico.sinais.map((s) => <li>{s}</li>)}</ul>
+
+        <h2>Como fazemos o serviço</h2>
+        <ol>{servico.comoFazemos.map((s) => <li>{s}</li>)}</ol>
+
+        <h2>Por que chamar a {site.name}</h2>
+        <ul>
+          <li>Atendimento 24 horas, inclusive fins de semana e feriados</li>
+          <li>Chegada em até {site.arrivalMinutes} minutos</li>
+          <li>Visita grátis para avaliar o defeito</li>
+          <li>{site.warrantyDays} dias de garantia no serviço</li>
+          <li>{site.yearsExperience} anos de experiência em refrigeração</li>
+          <li>Aceitamos todas as formas de pagamento</li>
+        </ul>
+
+        <h2>Perguntas frequentes</h2>
+        <FaqList items={faq} />
+
+        <h2>{servico.nome} por bairro</h2>
+        <p>
+          Atendemos {servico.nome.toLowerCase()} em Fortaleza, incluindo:
+          {bairros.map((b, i) => (
+            <>
+              <a href={bairroPath(b)}>{b.nome}</a>{i < bairros.length - 1 ? ', ' : '.'}
+            </>
+          ))}
+        </p>
+      </article>
+
+      <aside class="sidebar">
+        <div class="side-card">
+          <h2>Atendimento imediato</h2>
+          <p>Fale agora com um técnico e receba atendimento em até {site.arrivalMinutes} minutos.</p>
+          <CtaButtons message={msg} size="md" />
+        </div>
+        <div class="side-list">
+          <h2>Outros serviços</h2>
+          <ul>
+            {outros.map((s) => <li><a href={`/servicos/${s.slug}/`}>{s.nome}</a></li>)}
+            <li><a href="/servicos/"><strong>Ver todos <Icon name="arrow" size={14} /></strong></a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Trabalhos realizados</span>
+        <h2>Outros serviços que fizemos</h2>
+      </div>
+      <Gallery limit={8} exclude={servico.slug} />
+    </div>
+  </section>
+
+  <CtaBand message={msg} />
+</Base>

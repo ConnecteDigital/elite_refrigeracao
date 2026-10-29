@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import CtaBand from '../components/CtaBand.astro';
+import FaqList from '../components/FaqList.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { site } from '../data/site';
+import { servicos } from '../data/servicos';
+import { bairros, bairroPath, type Bairro } from '../data/bairros';
+import { breadcrumbSchema, faqSchema, serviceSchema } from '../data/schema';
+
+export function getStaticPaths() {
+  return bairros.map((bairro) => ({ params: { slug: bairro.slug }, props: { bairro } }));
+}
+
+interface Props {
+  bairro: Bairro;
+}
+
+const { bairro } = Astro.props;
+const path = bairroPath(bairro);
+const regiao = bairro.zona === 'Centro' ? 'região central' : bairro.zona;
+const crumbs = [
+  { name: 'Início', path: '/' },
+  { name: 'Áreas atendidas', path: '/areas-atendidas/' },
+  { name: `Conserto de geladeira em ${bairro.nome}`, path },
+];
+const faq = [
+  {
+    q: `Vocês atendem em ${bairro.nome} 24 horas?`,
+    a: `Sim. Atendemos ${bairro.nome} e bairros vizinhos 24 horas por dia, inclusive fins de semana e feriados.`,
+  },
+  {
+    q: `Em quanto tempo o técnico chega em ${bairro.nome}?`,
+    a: `Chegamos em até ${site.arrivalMinutes} minutos em ${bairro.nome}.`,
+  },
+  {
+    q: 'A visita para avaliar é cobrada?',
+    a: 'Não. A visita é gratuita: o técnico vai até você e faz o diagnóstico da geladeira, do freezer ou da câmara fria.',
+  },
+  {
+    q: `Atendem também ${bairro.vizinhos.slice(0, 2).join(' e ')}?`,
+    a: `Sim. Além de ${bairro.nome}, atendemos ${bairro.vizinhos.join(', ')} e toda a ${regiao} de Fortaleza.`,
+  },
+  {
+    q: 'O serviço tem garantia?',
+    a: `Sim. Todos os serviços da ${site.name} têm ${site.warrantyDays} dias de garantia.`,
+  },
+];
+const outrosBairros = bairros.filter((b) => b.slug !== bairro.slug);
+const msg = `Olá! Vim pelo site da ${site.name} e preciso de conserto de geladeira em ${bairro.nome}.`;
+const geladeira = servicos[0];
+---
+
+<Base
+  title={`Conserto de Geladeira em ${bairro.nome} 24h | ${site.name}`}
+  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, visita grátis e ${site.warrantyDays} dias de garantia.`}
+  schema={[serviceSchema(geladeira, `${bairro.nome}, Fortaleza - CE`), faqSchema(faq), breadcrumbSchema(crumbs)]}
+>
+  <section class="hero page-hero">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <span class="eyebrow">{bairro.zona} · Fortaleza</span>
+      <h1>Conserto de geladeira em {bairro.nome} 24 horas</h1>
+      <p class="hero-lead">
+        Geladeira, freezer ou câmara fria parou em {bairro.nome}? A {site.name} atende 24 horas e chega em até
+        {site.arrivalMinutes} minutos, com visita grátis e {site.warrantyDays} dias de garantia.
+      </p>
+      <CtaButtons message={msg} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content-grid">
+      <article class="prose">
+        <h2>Técnico de refrigeração em {bairro.nome}</h2>
+        <p>{bairro.sobre}</p>
+        <p>
+          Nossa equipe circula pela {regiao} e chega rápido em {bairro.nome} e nos bairros vizinhos, como
+          {bairro.vizinhos.join(', ')}. Assim que você chama, um técnico já sai para o endereço com manifold, solda e as
+          ferramentas para resolver.
+        </p>
+
+        <h2>O que fazemos em {bairro.nome}</h2>
+        <ul>
+          <li>Conserto de geladeira de uma e duas portas, frost free e degelo manual</li>
+          <li>Conserto de freezer horizontal e vertical, de casa e de comércio</li>
+          <li>Conserto e manutenção de câmara fria</li>
+          <li>Troca de compressor (motor), termostato, sensor e resistência</li>
+          <li>Detecção de vazamento, solda e carga de gás com laudo</li>
+          <li>Troca de borracha de vedação da porta</li>
+        </ul>
+
+        <h2>Perguntas frequentes</h2>
+        <FaqList items={faq} />
+      </article>
+
+      <aside class="sidebar">
+        <div class="side-card">
+          <h2>Técnico em {bairro.nome} agora</h2>
+          <p>Fale com a gente e receba atendimento em até {site.arrivalMinutes} minutos.</p>
+          <CtaButtons message={msg} size="md" />
+        </div>
+        <div class="side-list">
+          <h2>Outros bairros</h2>
+          <ul>
+            {outrosBairros.map((b) => <li><a href={bairroPath(b)}>Conserto de geladeira em {b.nome}</a></li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Serviços em {bairro.nome}</span>
+        <h2>Refrigeração em {bairro.nome}</h2>
+      </div>
+      <div class="services-grid">
+        {servicos.map((s) => <ServiceCard servico={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title={`Geladeira parada em ${bairro.nome}?`} message={msg} />
+</Base>

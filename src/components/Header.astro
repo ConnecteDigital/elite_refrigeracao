@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-marca.png';
+import Icon from './Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+import { servicos } from '../data/servicos';
+import { bairrosPorZona, bairroPath } from '../data/bairros';
+
+const zonas = bairrosPorZona();
+---
+
+<header class="site-header">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span><span class="pulse" aria-hidden="true"></span> Plantão 24h<span class="hide-sm"> em Fortaleza</span> · chegamos em até {site.arrivalMinutes} min</span>
+      <a href={site.tel} class="topbar-phone"><Icon name="phone" size={16} /> {site.phoneDisplay}</a>
+    </div>
+  </div>
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label={`${site.name}, página inicial`}>
+      <Image src={logo} alt={site.name} width={176} loading="eager" />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Principal">
+      <div class="nav-item has-sub">
+        <a href="/servicos/" aria-haspopup="true">Serviços <span class="caret" aria-hidden="true"></span></a>
+        <div class="submenu submenu-servicos">
+          <ul>
+            {servicos.map((s) => (
+              <li>
+                <a href={`/servicos/${s.slug}/`}><Icon name={s.icon} size={18} /> {s.nome}</a>
+              </li>
+            ))}
+          </ul>
+          <a class="submenu-all" href="/servicos/">Ver todos os serviços <Icon name="arrow" size={16} /></a>
+        </div>
+      </div>
+      <div class="nav-item has-sub">
+        <a href="/areas-atendidas/" aria-haspopup="true">Áreas atendidas <span class="caret" aria-hidden="true"></span></a>
+        <div class="submenu submenu-areas">
+          <div class="submenu-zonas">
+            {zonas.map((g) => (
+              <div>
+                <p class="submenu-zona">{g.zona}</p>
+                <ul>
+                  {g.bairros.map((b) => (
+                    <li><a href={bairroPath(b)}>{b.nome}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <a class="submenu-all" href="/areas-atendidas/">Ver todas as áreas <Icon name="arrow" size={16} /></a>
+        </div>
+      </div>
+      <div class="nav-item"><a href="/blog/">Blog</a></div>
+    </nav>
+
+    <div class="header-cta">
+      <a class="btn btn-wa btn-sm" href={whatsappUrl()} target="_blank" rel="noopener">
+        <Icon name="whatsapp" size={18} /> <span>WhatsApp</span>
+      </a>
+      <details class="nav-mobile">
+        <summary aria-label="Abrir menu"><span></span><span></span><span></span></summary>
+        <nav aria-label="Menu">
+          <details class="mobile-sub">
+            <summary>Serviços</summary>
+            <ul>
+              {servicos.map((s) => (
+                <li><a href={`/servicos/${s.slug}/`}><Icon name={s.icon} size={18} /> {s.nome}</a></li>
+              ))}
+              <li><a href="/servicos/"><strong>Ver todos os serviços</strong></a></li>
+            </ul>
+          </details>
+          <details class="mobile-sub">
+            <summary>Áreas atendidas</summary>
+            <ul>
+              {zonas.map((g) => (
+                <>
+                  <li class="mobile-zona">{g.zona}</li>
+                  {g.bairros.map((b) => (
+                    <li><a href={bairroPath(b)}><Icon name="pin" size={16} /> {b.nome}</a></li>
+                  ))}
+                </>
+              ))}
+              <li><a href="/areas-atendidas/"><strong>Ver todas as áreas</strong></a></li>
+            </ul>
+          </details>
+          <a href="/blog/">Blog</a>
+          <a href={site.tel}><Icon name="phone" size={18} /> Ligar: {site.phoneDisplay}</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Fecha o menu do celular ao tocar fora dele ou ao escolher um link.
+  const menu = document.querySelector<HTMLDetailsElement>('.nav-mobile');
+  if (menu) {
+    document.addEventListener('click', (e) => {
+      if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => (menu.open = false)));
+  }
+</script>

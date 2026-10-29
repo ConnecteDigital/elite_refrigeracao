@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getCollection } from 'astro:content';
+import { breadcrumbSchema } from '../../data/schema';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
+const crumbs = [
+  { name: 'Início', path: '/' },
+  { name: 'Blog', path: '/blog/' },
+];
+---
+
+<Base
+  title="Dicas de Geladeira e Freezer | Blog da Elite Refrigeração"
+  description="Dicas práticas para geladeira, freezer e câmara fria: o que fazer quando para de gelar, como economizar energia e quando chamar um técnico em Fortaleza."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <section class="hero page-hero">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <span class="eyebrow">Blog</span>
+      <h1>Dicas de refrigeração</h1>
+      <p class="hero-lead">O que fazer quando a geladeira para, como evitar problemas e quando chamar um técnico.</p>
+    </div>
+  </section>
+  <section class="section section-soft">
+    <div class="container posts">
+      {
+        posts.map((p) => (
+          <a class="post-card" href={`/blog/${p.id}/`}>
+            <time datetime={p.data.data.toISOString()}>{p.data.data.toLocaleDateString('pt-BR')}</time>
+            <h2>{p.data.titulo}</h2>
+            <p>{p.data.descricao}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <CtaBand />
+</Base>

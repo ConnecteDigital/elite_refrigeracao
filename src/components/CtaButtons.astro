@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+import { site, whatsappUrl } from '../data/site';
+
+interface Props {
+  message?: string;
+  size?: 'md' | 'lg';
+}
+
+const { message, size = 'lg' } = Astro.props;
+---
+
+<div class="cta-buttons">
+  <a class={`btn btn-wa btn-${size}`} href={whatsappUrl(message)} target="_blank" rel="noopener">
+    <Icon name="whatsapp" size={22} /> Chamar no WhatsApp
+  </a>
+  <a class={`btn btn-call btn-${size}`} href={site.tel}>
+    <Icon name="phone" size={20} /> Ligar {site.phoneDisplay}
+  </a>
+</div>

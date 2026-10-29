@@ -1,0 +1,188 @@
+---
+// Abertura da home: a cena 3D da geladeira gravada em vídeo (ver scripts/gravar-abertura.mjs).
+// Vídeo toca na hora em qualquer aparelho; textos e a revelação do site seguem o vídeo.
+// O site surge por um círculo que cresce do centro, saindo da luz de dentro da geladeira.
+// Só aparece quando o script do <head> marca a página com .intro-on.
+import { site } from '../data/site';
+import revelacao from '../data/abertura-revelacao.json';
+
+// momentos (s) em que cada texto entra; iguais ao roteiro em src/scripts/intro-scene.ts
+const etapas = { leak: 0.25, fix: 2.35, ok: 3.65 };
+---
+
+<div class="intro" id="intro" aria-hidden="true">
+  <video id="intro-video" class="intro-video" muted playsinline preload="auto" disablepictureinpicture></video>
+  <div class="intro-caption">
+    <p class="cap cap-leak">Geladeira parou de gelar?</p>
+    <p class="cap cap-fix">A gente resolve.</p>
+    <p class="cap cap-ok">Chegamos em até <strong>{site.arrivalMinutes} minutos</strong><span>24 horas</span></p>
+  </div>
+  <button class="intro-skip" type="button">Pular</button>
+</div>
+
+<script is:inline define:vars={{ revelacao, etapas }}>
+  (function () {
+    var root = document.documentElement;
+    var intro = document.getElementById('intro');
+    if (!intro || !root.classList.contains('intro-on')) {
+      if (intro) intro.remove();
+      return;
+    }
+    try {
+      sessionStorage.setItem('introVista', '1');
+    } catch (e) {}
+
+    var video = document.getElementById('intro-video');
+    var formato = window.matchMedia('(max-aspect-ratio: 9/10)').matches ? 'm' : 'd';
+    var dados = revelacao[formato];
+    var fechado = false;
+    if (!dados) {
+      root.classList.remove('intro-on');
+      intro.remove();
+      return;
+    }
+    video.poster = '/intro/abertura-' + formato + '.webp';
+
+    function fechar(suave) {
+      if (fechado) return;
+      fechado = true;
+      clearTimeout(limite);
+      var fim = function () {
+        root.classList.remove('intro-on');
+        intro.remove();
+      };
+      if (!suave) return fim();
+      intro.classList.add('is-fading');
+      setTimeout(fim, 450);
+    }
+
+    // rede muito lenta ou vídeo bloqueado: mostra o site sem esperar
+    var limite = setTimeout(function () {
+      fechar(true);
+    }, 2500);
+    intro.querySelector('.intro-skip').addEventListener('click', function () {
+      fechar(true);
+    });
+    video.addEventListener('playing', function () {
+      clearTimeout(limite);
+      root.classList.add('intro-ready');
+    });
+    video.addEventListener('ended', function () {
+      fechar(false);
+    });
+    video.addEventListener('error', function () {
+      fechar(true);
+    });
+    // AV1 (metade do tamanho) só quando o aparelho decodifica com eficiência; senão H.264
+    var escolhido = false;
+    function iniciar(av1) {
+      if (escolhido || fechado) return;
+      escolhido = true;
+      video.src = '/intro/abertura-' + formato + (av1 ? '-av1' : '') + '.mp4';
+      var tocando = video.play();
+      if (tocando && tocando.catch) tocando.catch(function () {
+        fechar(true);
+      });
+    }
+    // ?introAv1 força o AV1 (para testar em navegadores sem H.264)
+    if (/introAv1/.test(location.search)) iniciar(true);
+    try {
+      navigator.mediaCapabilities
+        .decodingInfo({
+          type: 'file',
+          video: {
+            contentType: 'video/mp4; codecs="av01.0.05M.08"',
+            width: dados.width,
+            height: dados.height,
+            bitrate: 600000,
+            framerate: 30,
+          },
+        })
+        .then(function (r) {
+          iniciar(r.supported && r.smooth && r.powerEfficient);
+        })
+        .catch(function () {
+          iniciar(false);
+        });
+    } catch (e) {
+      iniciar(false);
+    }
+    setTimeout(function () {
+      iniciar(false);
+    }, 100);
+
+    // textos e revelação acompanham o quadro atual do vídeo
+    function atualizar() {
+      if (fechado) return;
+      var t = video.currentTime;
+      intro.dataset.stage = t >= etapas.ok ? 'ok' : t >= etapas.fix ? 'fix' : t >= etapas.leak ? 'leak' : '';
+      var q = Math.min(dados.reveal.length - 1, Math.floor(t * dados.fps));
+      var frac = dados.reveal[q];
+      if (frac >= 0) {
+        // raio do círculo no mesmo enquadramento do object-fit: cover (centro do vídeo = centro da tela)
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        var s = Math.max(W / dados.width, H / dados.height);
+        var r = frac * dados.height * s;
+        var mask = 'radial-gradient(circle at 50% 50%, transparent ' + Math.max(0, r - 90) + 'px, #000 ' + r + 'px)';
+        intro.style.setProperty('mask-image', mask);
+        intro.style.setProperty('-webkit-mask-image', mask);
+        intro.classList.add('is-revealing');
+      }
+      if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(atualizar);
+      else requestAnimationFrame(atualizar);
+    }
+    if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(atualizar);
+    else requestAnimationFrame(atualizar);
+  })();
+</script>
+
+<style is:global>
+  .intro { display: none; }
+  html.intro-on .intro {
+    display: block; position: fixed; inset: 0; z-index: 200; background: #07090d;
+    transition: opacity .45s ease;
+  }
+  .intro.is-fading { opacity: 0; }
+  html.intro-on body { overflow: hidden; }
+  /* durante a revelação o site já pode ser rolado e clicado na parte de cima */
+  html.intro-on:has(.intro.is-revealing) body { overflow: auto; }
+  .intro.is-revealing { pointer-events: none; }
+  .intro.is-revealing .intro-caption { opacity: 0; transition: opacity .3s; }
+  .intro-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #07090d; }
+  .intro::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 45%, transparent 50%, rgba(0, 0, 0, .65) 100%);
+  }
+  .intro-caption {
+    position: absolute; left: 0; right: 0; top: 54%; text-align: center; pointer-events: none;
+    font-family: var(--font-display); text-transform: uppercase; color: #fff; padding: 0 20px;
+  }
+  .intro-caption::before {
+    content: ''; position: absolute; left: 50%; top: 0; width: 120%; height: 9em;
+    transform: translate(-50%, -50%); font-size: clamp(1rem, 4vw, 1.6rem);
+    background: radial-gradient(closest-side, rgba(5, 8, 14, .55), transparent);
+    opacity: 0; transition: opacity .45s ease;
+  }
+  .intro[data-stage='leak'] .intro-caption::before,
+  .intro[data-stage='fix'] .intro-caption::before,
+  .intro[data-stage='ok'] .intro-caption::before { opacity: 1; }
+  .cap {
+    position: absolute; left: 0; right: 0; top: 0; margin: 0; padding: 0 20px; opacity: 0;
+    transform: translateY(calc(-50% + 12px));
+    transition: opacity .45s ease, transform .45s ease;
+    font-size: clamp(2.4rem, 10vw, 4.4rem); font-weight: 800; line-height: 1.02; letter-spacing: .02em;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, .75), 0 1px 3px rgba(0, 0, 0, .6);
+  }
+  .cap strong { color: #ffc400; }
+  .cap span { display: block; margin-top: .25em; font-size: .42em; letter-spacing: .14em; color: #5fd3ff; }
+  .intro[data-stage='leak'] .cap-leak,
+  .intro[data-stage='fix'] .cap-fix,
+  .intro[data-stage='ok'] .cap-ok { opacity: 1; transform: translateY(-50%); }
+  .intro-skip {
+    position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px;
+    background: rgba(255, 255, 255, .1); color: #fff; border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 999px; padding: 8px 16px; font: 600 .9rem/1 var(--font-body); cursor: pointer;
+  }
+  .intro-skip:hover { background: rgba(255, 255, 255, .2); }
+</style>

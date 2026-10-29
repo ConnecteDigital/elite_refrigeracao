@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Servico } from '../data/servicos';
+import { fotoDoServico } from '../data/fotos';
+
+interface Props {
+  servico: Servico;
+}
+
+const { servico } = Astro.props;
+const foto = fotoDoServico(servico.slug);
+---
+
+<a class="service-card has-photo" href={`/servicos/${servico.slug}/`}>
+  {
+    foto ? (
+      <span class="service-photo">
+        <Image src={foto.src} alt={foto.alt} widths={[320, 480, 640]} sizes="(max-width: 600px) 100vw, 300px" />
+      </span>
+    ) : (
+      <span class="service-photo service-photo-empty">
+        <Icon name={servico.icon} size={72} />
+      </span>
+    )
+  }
+  <span class="service-icon"><Icon name={servico.icon} size={28} /></span>
+  <h3>{servico.nome}</h3>
+  <p>{servico.resumo}</p>
+  <span class="service-more">Saiba mais <Icon name="arrow" size={16} /></span>
+</a>

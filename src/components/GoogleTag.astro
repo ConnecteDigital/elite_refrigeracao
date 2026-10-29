@@ -1,0 +1,16 @@
+---
+// Tag do Google (gtag.js), em todas as páginas.
+import { googleTagId } from '../data/site';
+---
+
+{googleTagId && <>
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}></script>
+<script is:inline define:vars={{ googleTagId }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', googleTagId);
+</script>
+</>}
