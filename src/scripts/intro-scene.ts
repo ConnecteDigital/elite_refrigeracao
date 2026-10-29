@@ -29,18 +29,21 @@ export interface IntroOptions {
   record?: { fps: number; preview?: boolean };
 }
 
-// Roteiro em segundos
+// Ritmo da abertura: 1 = roteiro original (6,5 s). Maior = mais devagar.
+const LENTO = 1.6;
+
+// Roteiro em segundos (no ritmo original; multiplicado por LENTO)
 const T = {
-  leakStart: 0.25,
-  toBack: 1.35,
-  toolsIn: 1.75,
-  grip: 2.35,
-  compressorOn: 2.75,
-  fixed: 3.65,
-  cooling: 4.05,
-  open: 4.95,
-  reveal: 5.45,
-  end: 6.5,
+  leakStart: 0.25 * LENTO,
+  toBack: 1.35 * LENTO,
+  toolsIn: 1.75 * LENTO,
+  grip: 2.35 * LENTO,
+  compressorOn: 2.75 * LENTO,
+  fixed: 3.65 * LENTO,
+  cooling: 4.05 * LENTO,
+  open: 4.95 * LENTO,
+  reveal: 5.45 * LENTO,
+  end: 6.5 * LENTO,
 };
 
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
@@ -1021,7 +1024,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks, opts: 
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: fogTex, transparent: true, opacity: 0, depthWrite: false, color: 0xe6f3ff }));
     s.visible = false;
     scene.add(s);
-    vapor.push({ sprite: s, life: -1, v: new THREE.Vector3(), born: T.open + 0.08 + (i / VAPOR) * 1.2 });
+    vapor.push({ sprite: s, life: -1, v: new THREE.Vector3(), born: T.open + 0.08 + (i / VAPOR) * 1.2 * LENTO });
   }
 
   const dummy = new THREE.Object3D();
@@ -1074,7 +1077,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks, opts: 
       { t: 5.45, pos: V(0.05, 1.6, FRONT + front * 0.62), look: V(0, 1.45, 0) },
       { t: 6.5, pos: V(0.0, 1.5, FRONT - 0.2), look: V(0, 1.4, -0.6) },
       { t: 99, pos: V(0.0, 1.5, FRONT - 0.3), look: V(0, 1.4, -0.6) },
-    ];
+    ].map((shot) => ({ ...shot, t: shot.t * LENTO }));
   }
   let plan = shots();
   let posCurve = new THREE.CatmullRomCurve3(plan.map((s) => s.pos), false, 'centripetal');
@@ -1155,7 +1158,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks, opts: 
     if (t > T.fixed) setStage('ok');
 
     // painel: esquentando até 15 °C (alerta), depois esfria até 4 °C
-    const warm = Math.round(9 + 6 * easeOut(phase(t, 0, 1.4)));
+    const warm = Math.round(9 + 6 * easeOut(phase(t, 0, 1.4 * LENTO)));
     const cool = easeInOut(phase(t, T.cooling, T.open - 0.1));
     const temp = cool > 0 ? Math.round(15 - 11 * cool) : warm;
     const warn = cool < 0.5;
