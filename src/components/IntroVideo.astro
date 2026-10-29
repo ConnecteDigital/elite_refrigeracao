@@ -7,7 +7,8 @@ import { site } from '../data/site';
 import revelacao from '../data/abertura-revelacao.json';
 
 // momentos (s) em que cada texto entra; iguais ao roteiro em src/scripts/intro-scene.ts
-const etapas = { leak: 0.25, fix: 2.35, ok: 3.65 };
+// (leakStart, grip e fixed já multiplicados por LENTO = 1.6)
+const etapas = { leak: 0.4, fix: 3.76, ok: 5.84 };
 ---
 
 <div class="intro" id="intro" aria-hidden="true">
