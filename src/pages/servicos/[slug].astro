@@ -5,7 +5,7 @@ import CtaButtons from '../../components/CtaButtons.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import FaqList from '../../components/FaqList.astro';
 import Icon from '../../components/Icon.astro';
-import Gallery from '../../components/Gallery.astro';
+import RealPhotos from '../../components/RealPhotos.astro';
 import { Image } from 'astro:assets';
 import { fotoDoServico } from '../../data/fotos';
 import { site } from '../../data/site';
@@ -123,9 +123,9 @@ const msg = `Olá! Vim pelo site da ${site.name} e preciso de ${servico.nome.toL
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Trabalhos realizados</span>
-        <h2>Outros serviços que fizemos</h2>
+        <h2>Nossa equipe em ação</h2>
       </div>
-      <Gallery limit={8} exclude={servico.slug} />
+      <RealPhotos />
     </div>
   </section>
 

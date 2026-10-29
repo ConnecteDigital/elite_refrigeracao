@@ -6,6 +6,7 @@ import ServiceCard from '../components/ServiceCard.astro';
 import FaqList from '../components/FaqList.astro';
 import Icon from '../components/Icon.astro';
 import IntroVideo from '../components/IntroVideo.astro';
+import RealPhotos from '../components/RealPhotos.astro';
 import { Image } from 'astro:assets';
 import { fotoDoServico } from '../data/fotos';
 import { site } from '../data/site';
@@ -47,11 +48,6 @@ const faq = [
 
 const marcas = ['Brastemp', 'Consul', 'Electrolux', 'GE', 'Bosch', 'Mabe', 'LG', 'Samsung'];
 const fotoEquipe = fotoDoServico('equipe');
-const fotosReais = [
-  { foto: fotoEquipe, legenda: 'Equipe Elite' },
-  { foto: fotoDoServico('conserto-de-geladeira'), legenda: 'Conserto de geladeira', href: '/servicos/conserto-de-geladeira/' },
-  { foto: fotoDoServico('troca-de-compressor'), legenda: 'Troca de compressor', href: '/servicos/troca-de-compressor/' },
-].filter((f) => f.foto);
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.data.getTime() - a.data.data.getTime())
@@ -206,25 +202,7 @@ const posts = (await getCollection('blog'))
         <h2>Nossa equipe em ação</h2>
         <p>Fotos reais de atendimentos da {site.name} em Fortaleza.</p>
       </div>
-      <div class="real-photos">
-        {
-          fotosReais.map(({ foto, legenda, href }) => (
-            <figure>
-              {href ? (
-                <a href={href}>
-                  <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 480px" />
-                  <figcaption>{legenda}</figcaption>
-                </a>
-              ) : (
-                <>
-                  <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 560px" />
-                  <figcaption>{legenda}</figcaption>
-                </>
-              )}
-            </figure>
-          ))
-        }
-      </div>
+      <RealPhotos />
     </div>
   </section>
 
