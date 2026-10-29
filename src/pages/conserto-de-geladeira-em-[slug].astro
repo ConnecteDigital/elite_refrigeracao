@@ -45,7 +45,7 @@ const faq = [
   },
   {
     q: 'O serviço tem garantia?',
-    a: `Sim. Todos os serviços da ${site.name} têm ${site.warrantyDays} dias de garantia.`,
+    a: `Sim. Todos os serviços da ${site.name} têm ${site.warranty} de garantia.`,
   },
 ];
 const outrosBairros = bairros.filter((b) => b.slug !== bairro.slug);
@@ -55,7 +55,7 @@ const geladeira = servicos[0];
 
 <Base
   title={`Conserto de Geladeira em ${bairro.nome} 24h | ${site.name}`}
-  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, visita grátis e ${site.warrantyDays} dias de garantia.`}
+  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, visita grátis e ${site.warranty} de garantia.`}
   schema={[serviceSchema(geladeira, `${bairro.nome}, Fortaleza - CE`), faqSchema(faq), breadcrumbSchema(crumbs)]}
 >
   <section class="hero page-hero">
@@ -65,7 +65,7 @@ const geladeira = servicos[0];
       <h1>Conserto de geladeira em {bairro.nome} 24 horas</h1>
       <p class="hero-lead">
         Geladeira, freezer ou câmara fria parou em {bairro.nome}? A {site.name} atende 24 horas e chega em até
-        {site.arrivalMinutes} minutos, com visita grátis e {site.warrantyDays} dias de garantia.
+        {site.arrivalMinutes} minutos, com visita grátis e {site.warranty} de garantia.
       </p>
       <CtaButtons message={msg} />
     </div>

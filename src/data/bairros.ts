@@ -198,7 +198,7 @@ export const bairros: Bairro[] = [
     nome: 'Autran Nunes',
     zona: 'Zona Oeste',
     sobre:
-      'O Autran Nunes é um bairro residencial com comércio de bairro. Fazemos conserto de geladeira de uma e duas portas, troca de motor, termostato e sensor de temperatura com 30 dias de garantia.',
+      'O Autran Nunes é um bairro residencial com comércio de bairro. Fazemos conserto de geladeira de uma e duas portas, troca de motor, termostato e sensor de temperatura com 1 ano de garantia.',
     vizinhos: ['Antônio Bezerra', 'Dom Lustosa', 'Genibaú', 'Henrique Jorge'],
   },
   {
@@ -295,7 +295,7 @@ export const bairros: Bairro[] = [
     nome: 'Itaoca',
     zona: 'Zona Sul',
     sobre:
-      'A Itaoca é residencial e fica perto da Parangaba. Atendemos geladeiras e freezers de casa e de pequenos comércios, com visita grátis e 30 dias de garantia no serviço.',
+      'A Itaoca é residencial e fica perto da Parangaba. Atendemos geladeiras e freezers de casa e de pequenos comércios, com visita grátis e 1 ano de garantia no serviço.',
     vizinhos: ['Parangaba', 'Itaperi', 'Vila Peri', 'Serrinha'],
   },
   {

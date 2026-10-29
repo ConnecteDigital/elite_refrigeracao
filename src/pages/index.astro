@@ -30,7 +30,7 @@ const faq = [
   },
   {
     q: 'Os serviços têm garantia?',
-    a: `Sim. Todos os serviços da ${site.name} têm ${site.warrantyDays} dias de garantia.`,
+    a: `Sim. Todos os serviços da ${site.name} têm ${site.warranty} de garantia.`,
   },
   {
     q: 'Vocês consertam ar-condicionado?',
@@ -92,7 +92,7 @@ const posts = (await getCollection('blog'))
     <div class="container hero-center">
       <span class="eyebrow">Geladeira · Freezer · Câmara fria · Plantão 24h</span>
       <h1>Conserto de geladeira 24h em Fortaleza: <em>chegamos em até {site.arrivalMinutes} minutos</em></h1>
-      <p class="hero-lead">Geladeira, freezer ou câmara fria parou de gelar? A gente resolve hoje, com visita grátis e {site.warrantyDays} dias de garantia.</p>
+      <p class="hero-lead">Geladeira, freezer ou câmara fria parou de gelar? A gente resolve hoje, com visita grátis e {site.warranty} de garantia.</p>
       <CtaButtons />
       <ul class="hero-badges">
         <li><Icon name="clock" size={22} /> <span>Atendimento 24h</span></li>
@@ -106,7 +106,7 @@ const posts = (await getCollection('blog'))
     <div class="container trust-grid">
       <div class="trust-item"><Icon name="clock" size={34} /><div><strong>24 horas</strong><span>Todos os dias, inclusive feriados</span></div></div>
       <div class="trust-item"><Icon name="bolt" size={34} /><div><strong>{site.arrivalMinutes} minutos</strong><span>Tempo de chegada</span></div></div>
-      <div class="trust-item"><Icon name="shield" size={34} /><div><strong>{site.warrantyDays} dias</strong><span>De garantia no serviço</span></div></div>
+      <div class="trust-item"><Icon name="shield" size={34} /><div><strong>{site.warranty}</strong><span>De garantia no serviço</span></div></div>
       <div class="trust-item"><Icon name="medal" size={34} /><div><strong>{site.yearsExperience} anos</strong><span>De experiência em Fortaleza</span></div></div>
     </div>
   </section>
@@ -141,7 +141,7 @@ const posts = (await getCollection('blog'))
           <p>Um técnico sai na hora para o endereço. A visita para avaliar o defeito é grátis.</p>
         </div>
         <div class="step-card">
-          <h3>Conserto com {site.warrantyDays} dias de garantia</h3>
+          <h3>Conserto com {site.warranty} de garantia</h3>
           <p>Fazemos o reparo, testamos tudo funcionando e você paga como preferir.</p>
         </div>
       </div>
@@ -178,7 +178,7 @@ const posts = (await getCollection('blog'))
           </div>
           <div class="feature">
             <Icon name="shield" size={30} />
-            <div><h3>{site.warrantyDays} dias de garantia</h3><p>Todo serviço sai com garantia. Se algo der errado, voltamos para resolver.</p></div>
+            <div><h3>{site.warranty} de garantia</h3><p>Todo serviço sai com garantia. Se algo der errado, voltamos para resolver.</p></div>
           </div>
           <div class="feature">
             <Icon name="medal" size={30} />

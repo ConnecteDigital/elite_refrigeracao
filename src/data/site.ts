@@ -15,10 +15,11 @@ export const site = {
   phoneDisplay: `(${PHONE_DIGITS.slice(2, 4)}) ${PHONE_DIGITS.slice(4, 9)}-${PHONE_DIGITS.slice(9)}`,
   tel: `tel:+${PHONE_DIGITS}`,
   arrivalMinutes: 20,
-  warrantyDays: 30,
+  // garantia de todos os serviços, como aparece no site
+  warranty: '1 ano',
   yearsExperience: 10,
   description:
-    'Conserto de geladeira, freezer e câmara fria 24 horas em Fortaleza. Troca de compressor, carga de gás com laudo, termostato e vedação. Chegamos em até 20 minutos, visita grátis e 30 dias de garantia.',
+    'Conserto de geladeira, freezer e câmara fria 24 horas em Fortaleza. Troca de compressor, carga de gás com laudo, termostato e vedação. Chegamos em até 20 minutos, visita grátis e 1 ano de garantia.',
 };
 
 export const DEFAULT_WHATSAPP_MESSAGE =

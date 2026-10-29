@@ -27,7 +27,7 @@ export const servicos: Servico[] = [
     keyword: 'Conserto de geladeira 24 horas em Fortaleza',
     resumo: 'Geladeira que não gela, não liga, faz barulho ou vaza água. Uma e duas portas, todas as marcas.',
     metaDescription:
-      'Conserto de geladeira 24h em Fortaleza: não gela, não liga, vaza água ou faz barulho. Chegamos em até 20 minutos, visita grátis e 30 dias de garantia.',
+      'Conserto de geladeira 24h em Fortaleza: não gela, não liga, vaza água ou faz barulho. Chegamos em até 20 minutos, visita grátis e 1 ano de garantia.',
     icon: 'fridge',
     destaque: true,
     intro: [
@@ -59,7 +59,7 @@ export const servicos: Servico[] = [
       },
       {
         q: 'O conserto de geladeira tem garantia?',
-        a: 'Sim. Todos os serviços da Elite Refrigeração têm 30 dias de garantia.',
+        a: 'Sim. Todos os serviços da Elite Refrigeração têm 1 ano de garantia.',
       },
     ],
   },
@@ -167,7 +167,7 @@ export const servicos: Servico[] = [
       },
       {
         q: 'Troca de compressor tem garantia?',
-        a: 'Sim. O serviço tem 30 dias de garantia.',
+        a: 'Sim. O serviço tem 1 ano de garantia.',
       },
     ],
   },
@@ -247,7 +247,7 @@ export const servicos: Servico[] = [
     keyword: 'Troca de termostato e sensor de temperatura de geladeira e freezer',
     resumo: 'Geladeira que congela tudo ou não desliga? Trocamos termostato e sensor de temperatura.',
     metaDescription:
-      'Troca de termostato e sensor de temperatura de geladeira e freezer em Fortaleza. Atendimento 24h, chegamos em até 20 minutos, 30 dias de garantia.',
+      'Troca de termostato e sensor de temperatura de geladeira e freezer em Fortaleza. Atendimento 24h, chegamos em até 20 minutos, 1 ano de garantia.',
     icon: 'thermometer',
     intro: [
       'O termostato e o sensor de temperatura dizem para a geladeira quando ligar e desligar o motor. Quando falham, a geladeira congela tudo, inclusive verduras, ou fica quente mesmo com o motor funcionando.',
@@ -278,7 +278,7 @@ export const servicos: Servico[] = [
     keyword: 'Troca de resistência de degelo de geladeira e freezer',
     resumo: 'Gelo acumulado no fundo do freezer e geladeira quente: trocamos a resistência de degelo.',
     metaDescription:
-      'Troca de resistência de degelo de geladeira frost free e freezer em Fortaleza. Atendimento 24h, chegamos em até 20 minutos, 30 dias de garantia.',
+      'Troca de resistência de degelo de geladeira frost free e freezer em Fortaleza. Atendimento 24h, chegamos em até 20 minutos, 1 ano de garantia.',
     icon: 'heat',
     intro: [
       'Nas geladeiras frost free e em muitos freezers, a resistência derrete o gelo que se forma no evaporador. Quando ela queima, o gelo vai se acumulando, bloqueia a passagem de ar frio e a geladeira para de gelar embaixo.',
