@@ -6,7 +6,6 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
-import GoogleTag from '../components/GoogleTag.astro';
 import GoogleTagManager from '../components/GoogleTagManager.astro';
 import { site } from '../data/site';
 import { localBusinessSchema } from '../data/schema';
@@ -53,7 +52,6 @@ const jsonLd = [localBusinessSchema(), ...schema];
 
     {jsonLd.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
     <slot name="head" />
-    <GoogleTag />
   </head>
   <body>
     <GoogleTagManager part="body" />
