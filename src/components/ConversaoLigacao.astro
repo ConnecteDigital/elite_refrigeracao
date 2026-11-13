@@ -1,0 +1,13 @@
+---
+// Conversão "Ligação pelo site" (Google Ads): dispara no clique em qualquer link tel:.
+// Usa o dataLayer do Google Tag Manager (GTM-WWQZGKDL), que já carrega a tag do Google AW-18515013959.
+---
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+    if (!a) return;
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('event', 'conversion', { send_to: 'AW-18515013959/CLSXCM6PgLgdEMfi0vxE' });
+  }, true);
+</script>
