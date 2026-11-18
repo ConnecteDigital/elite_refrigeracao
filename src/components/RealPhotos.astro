@@ -1,13 +1,20 @@
 ---
-// Fotos reais da equipe e dos atendimentos (as que o cliente tem hoje).
+// Fotos reais da equipe e dos atendimentos. A primeira (equipe) aparece maior.
 import { Image } from 'astro:assets';
 import { fotoDoServico } from '../data/fotos';
 
 const fotos = [
-  { foto: fotoDoServico('equipe'), legenda: 'Equipe Elite' },
-  { foto: fotoDoServico('conserto-de-geladeira'), legenda: 'Conserto de geladeira', href: '/servicos/conserto-de-geladeira/' },
-  { foto: fotoDoServico('troca-de-compressor'), legenda: 'Troca de compressor', href: '/servicos/troca-de-compressor/' },
-].filter((f) => f.foto);
+  { slug: 'equipe', legenda: 'Equipe Elite' },
+  { slug: 'conserto-de-geladeira', legenda: 'Conserto de geladeira', href: '/servicos/conserto-de-geladeira/' },
+  { slug: 'atendimento', legenda: 'Atendimento a domicílio' },
+  { slug: 'conserto-de-freezer', legenda: 'Conserto de freezer', href: '/servicos/conserto-de-freezer/' },
+  { slug: 'carga-de-gas', legenda: 'Carga de gás', href: '/servicos/carga-de-gas/' },
+  { slug: 'troca-de-compressor', legenda: 'Troca de compressor', href: '/servicos/troca-de-compressor/' },
+  { slug: 'vazamento-de-gas-e-solda', legenda: 'Solda e vazamento', href: '/servicos/vazamento-de-gas-e-solda/' },
+  { slug: 'manutencao-preventiva', legenda: 'Manutenção preventiva', href: '/servicos/manutencao-preventiva/' },
+]
+  .map((f) => ({ ...f, foto: fotoDoServico(f.slug) }))
+  .filter((f) => f.foto);
 ---
 
 <div class="real-photos">
@@ -16,12 +23,12 @@ const fotos = [
       <figure>
         {href ? (
           <a href={href}>
-            <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 480px" />
+            <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 50vw, 380px" />
             <figcaption>{legenda}</figcaption>
           </a>
         ) : (
           <>
-            <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 560px" />
+            <Image src={foto!.src} alt={foto!.alt} widths={[400, 700, 1000]} sizes="(max-width: 800px) 100vw, 760px" />
             <figcaption>{legenda}</figcaption>
           </>
         )}
