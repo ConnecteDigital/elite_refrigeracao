@@ -36,10 +36,6 @@ const faq = [
     a: `Chegamos em até ${site.arrivalMinutes} minutos em ${bairro.nome}.`,
   },
   {
-    q: 'A visita para avaliar é cobrada?',
-    a: 'Não. A visita é gratuita: o técnico vai até você e faz o diagnóstico da geladeira, do freezer ou da câmara fria.',
-  },
-  {
     q: `Atendem também ${bairro.vizinhos.slice(0, 2).join(' e ')}?`,
     a: `Sim. Além de ${bairro.nome}, atendemos ${bairro.vizinhos.join(', ')} e toda a ${regiao} de Fortaleza.`,
   },
@@ -55,7 +51,7 @@ const geladeira = servicos[0];
 
 <Base
   title={`Conserto de Geladeira em ${bairro.nome} 24h | ${site.name}`}
-  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, visita grátis e ${site.warranty} de garantia.`}
+  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, com ${site.warranty} de garantia.`}
   schema={[serviceSchema(geladeira, `${bairro.nome}, Fortaleza - CE`), faqSchema(faq), breadcrumbSchema(crumbs)]}
 >
   <section class="hero page-hero">
@@ -65,7 +61,7 @@ const geladeira = servicos[0];
       <h1>Conserto de geladeira em {bairro.nome} 24 horas</h1>
       <p class="hero-lead">
         Geladeira, freezer ou câmara fria parou em {bairro.nome}? A {site.name} atende 24 horas e chega em até
-        {site.arrivalMinutes} minutos, com visita grátis e {site.warranty} de garantia.
+        {site.arrivalMinutes} minutos, com {site.warranty} de garantia.
       </p>
       <CtaButtons message={msg} />
     </div>

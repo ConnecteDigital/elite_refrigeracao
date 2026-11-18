@@ -25,10 +25,6 @@ const faq = [
     a: `Nossa equipe chega em até ${site.arrivalMinutes} minutos nos bairros atendidos.`,
   },
   {
-    q: 'A visita é cobrada?',
-    a: 'Não. A visita é gratuita: o técnico vai até você e faz o diagnóstico do aparelho.',
-  },
-  {
     q: 'Os serviços têm garantia?',
     a: `Sim. Todos os serviços da ${site.name} têm ${site.warranty} de garantia.`,
   },
@@ -92,12 +88,12 @@ const posts = (await getCollection('blog'))
     <div class="container hero-center">
       <span class="eyebrow">Geladeira · Freezer · Câmara fria · Plantão 24h</span>
       <h1>Conserto de geladeira 24h em Fortaleza: <em>chegamos em até {site.arrivalMinutes} minutos</em></h1>
-      <p class="hero-lead">Geladeira, freezer ou câmara fria parou de gelar? A gente resolve hoje, com visita grátis e {site.warranty} de garantia.</p>
+      <p class="hero-lead">Geladeira, freezer ou câmara fria parou de gelar? A gente resolve hoje, com {site.warranty} de garantia.</p>
       <CtaButtons />
       <ul class="hero-badges">
         <li><Icon name="clock" size={22} /> <span>Atendimento 24h</span></li>
         <li><Icon name="bolt" size={22} /> <span>Chegada em até {site.arrivalMinutes} min</span></li>
-        <li><Icon name="gift" size={22} /> <span>Visita grátis</span></li>
+        <li><Icon name="shield" size={22} /> <span>{site.warranty} de garantia</span></li>
       </ul>
     </div>
   </section>
@@ -138,7 +134,7 @@ const posts = (await getCollection('blog'))
         </div>
         <div class="step-card">
           <h3>Chegamos em até {site.arrivalMinutes} minutos</h3>
-          <p>Um técnico sai na hora para o endereço. A visita para avaliar o defeito é grátis.</p>
+          <p>Um técnico sai na hora para o endereço, com as ferramentas para resolver no local.</p>
         </div>
         <div class="step-card">
           <h3>Conserto com {site.warranty} de garantia</h3>
@@ -173,8 +169,8 @@ const posts = (await getCollection('blog'))
             <div><h3>Chegamos em {site.arrivalMinutes} minutos</h3><p>Quanto antes o técnico chega, menos comida e mercadoria você perde.</p></div>
           </div>
           <div class="feature">
-            <Icon name="gift" size={30} />
-            <div><h3>Visita grátis</h3><p>O técnico vai até você e faz o diagnóstico sem cobrar a visita.</p></div>
+            <Icon name="fridge" size={30} />
+            <div><h3>Casa e comércio</h3><p>Geladeira de casa, freezer de sorveteria, câmara fria de restaurante: atendemos tudo.</p></div>
           </div>
           <div class="feature">
             <Icon name="shield" size={30} />

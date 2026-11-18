@@ -27,12 +27,12 @@ export const servicos: Servico[] = [
     keyword: 'Conserto de geladeira 24 horas em Fortaleza',
     resumo: 'Geladeira que não gela, não liga, faz barulho ou vaza água. Uma e duas portas, todas as marcas.',
     metaDescription:
-      'Conserto de geladeira 24h em Fortaleza: não gela, não liga, vaza água ou faz barulho. Chegamos em até 20 minutos, visita grátis e 1 ano de garantia.',
+      'Conserto de geladeira 24h em Fortaleza: não gela, não liga, vaza água ou faz barulho. Chegamos em até 20 minutos, com 1 ano de garantia.',
     icon: 'fridge',
     destaque: true,
     intro: [
       'Geladeira parada em Fortaleza é comida estragando em poucas horas. A Elite Refrigeração atende 24 horas, inclusive à noite, nos fins de semana e feriados, e chega em até 20 minutos para descobrir o defeito e resolver.',
-      'Consertamos geladeiras de uma e duas portas, frost free e degelo manual, das marcas Brastemp, Consul, Electrolux, GE, Bosch, Mabe, LG e Samsung. O diagnóstico é feito no local, com manifold e equipamentos próprios, e a visita é gratuita.',
+      'Consertamos geladeiras de uma e duas portas, frost free e degelo manual, das marcas Brastemp, Consul, Electrolux, GE, Bosch, Mabe, LG e Samsung. O diagnóstico é feito no local, com manifold e equipamentos próprios.',
     ],
     sinais: [
       'A geladeira liga, mas não gela ou gela pouco',
@@ -49,10 +49,6 @@ export const servicos: Servico[] = [
       'Fazemos o reparo e testamos a geladeira funcionando',
     ],
     faq: [
-      {
-        q: 'A visita para avaliar a geladeira é cobrada?',
-        a: 'Não. A visita é gratuita: o técnico vai até você, faz o diagnóstico e explica o defeito.',
-      },
       {
         q: 'Vocês consertam geladeira frost free?',
         a: 'Sim. Atendemos geladeiras frost free e de degelo manual, de uma e duas portas, de todas as principais marcas.',

@@ -206,7 +206,7 @@ export const bairros: Bairro[] = [
     nome: 'Henrique Jorge',
     zona: 'Zona Oeste',
     sobre:
-      'O Henrique Jorge tem ruas residenciais e muito comércio de bairro, com mercadinhos e lanchonetes. Atendemos geladeiras e freezers de casa e de comércio, com visita grátis e chegada em até 20 minutos.',
+      'O Henrique Jorge tem ruas residenciais e muito comércio de bairro, com mercadinhos e lanchonetes. Atendemos geladeiras e freezers de casa e de comércio, com chegada em até 20 minutos.',
     vizinhos: ['João XXIII', 'Autran Nunes', 'Bonsucesso', 'Jóquei Clube'],
   },
   {
@@ -230,7 +230,7 @@ export const bairros: Bairro[] = [
     nome: 'Granja Lisboa',
     zona: 'Zona Oeste',
     sobre:
-      'A Granja Lisboa tem muitas casas e comércio de bairro. Fazemos conserto de geladeira e freezer, troca de compressor e solda de tubulação, com visita gratuita para avaliar o defeito.',
+      'A Granja Lisboa tem muitas casas e comércio de bairro. Fazemos conserto de geladeira e freezer, troca de compressor e solda de tubulação, com 1 ano de garantia.',
     vizinhos: ['Bom Jardim', 'Granja Portugal', 'Siqueira', 'Canindezinho'],
   },
   {
@@ -295,7 +295,7 @@ export const bairros: Bairro[] = [
     nome: 'Itaoca',
     zona: 'Zona Sul',
     sobre:
-      'A Itaoca é residencial e fica perto da Parangaba. Atendemos geladeiras e freezers de casa e de pequenos comércios, com visita grátis e 1 ano de garantia no serviço.',
+      'A Itaoca é residencial e fica perto da Parangaba. Atendemos geladeiras e freezers de casa e de pequenos comércios, com 1 ano de garantia no serviço.',
     vizinhos: ['Parangaba', 'Itaperi', 'Vila Peri', 'Serrinha'],
   },
   {
@@ -343,7 +343,7 @@ export const bairros: Bairro[] = [
     nome: 'Ancuri',
     zona: 'Zona Sul',
     sobre:
-      'O Ancuri fica no extremo sul de Fortaleza, com ruas residenciais e comércio de bairro. Atendemos conserto de geladeira, freezer e troca de borracha de vedação, com visita gratuita.',
+      'O Ancuri fica no extremo sul de Fortaleza, com ruas residenciais e comércio de bairro. Atendemos conserto de geladeira, freezer e troca de borracha de vedação, 24 horas por dia.',
     vizinhos: ['Jangurussu', 'Pedras', 'Messejana', 'Barroso'],
   },
 ];

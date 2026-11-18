@@ -31,4 +31,4 @@ Esses detalhes ajudam o técnico a chegar já sabendo o que procurar:
 
 Se depois de conferir o básico a geladeira continua sem gelar, chame um técnico. Não tente abrir tubulações nem colocar gás por conta própria: o sistema é fechado e pressurizado, e a carga errada pode danificar o compressor.
 
-A Elite Refrigeração atende 24 horas em Fortaleza, chega em até 20 minutos e a visita para avaliar o defeito é grátis.
+A Elite Refrigeração atende 24 horas em Fortaleza, chega em até 20 minutos e todo serviço tem 1 ano de garantia.

@@ -19,7 +19,7 @@ export const site = {
   warranty: '1 ano',
   yearsExperience: 10,
   description:
-    'Conserto de geladeira, freezer e câmara fria 24 horas em Fortaleza. Troca de compressor, carga de gás com laudo, termostato e vedação. Chegamos em até 20 minutos, visita grátis e 1 ano de garantia.',
+    'Conserto de geladeira, freezer e câmara fria 24 horas em Fortaleza. Troca de compressor, carga de gás com laudo, termostato e vedação. Chegamos em até 20 minutos, com 1 ano de garantia.',
 };
 
 export const DEFAULT_WHATSAPP_MESSAGE =
