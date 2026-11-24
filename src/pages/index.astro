@@ -11,7 +11,7 @@ import { Image } from 'astro:assets';
 import { fotoDoServico } from '../data/fotos';
 import { site } from '../data/site';
 import { servicos } from '../data/servicos';
-import { bairrosPorZona, bairroPath, zonasPrioritarias } from '../data/bairros';
+import { bairros, bairrosPorRegiao, bairroPath, regiaoLabel } from '../data/bairros';
 import { faqSchema } from '../data/schema';
 import { getCollection } from 'astro:content';
 
@@ -219,16 +219,16 @@ const posts = (await getCollection('blog'))
       <div class="section-head">
         <span class="eyebrow">Áreas atendidas</span>
         <h2>Técnico de geladeira perto de você</h2>
-        <p>Atendemos a domicílio em Fortaleza, nos bairros abaixo.</p>
+        <p>Atendemos a domicílio em {bairros.length} bairros de Fortaleza. Toque na sua região e encontre o seu bairro.</p>
       </div>
       <div class="zones">
         {
-          bairrosPorZona().map((g) => (
-            <div class:list={['zone', { 'is-priority': zonasPrioritarias.includes(g.zona) }]}>
-              <h3>
-                {g.zona}
-                {zonasPrioritarias.includes(g.zona) && <span class="tag">Foco</span>}
-              </h3>
+          bairrosPorRegiao().map((g) => (
+            <details class="zone zone-regiao">
+              <summary>
+                <h3>{regiaoLabel(g.regiao)}</h3>
+                <span>{g.bairros.length} {g.bairros.length === 1 ? 'bairro' : 'bairros'}</span>
+              </summary>
               <ul>
                 {g.bairros.map((b) => (
                   <li>
@@ -238,10 +238,11 @@ const posts = (await getCollection('blog'))
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           ))
         }
       </div>
+      <p style="margin-top:20px"><a href="/areas-atendidas/"><strong>Ver todos os bairros atendidos</strong></a></p>
     </div>
   </section>
 

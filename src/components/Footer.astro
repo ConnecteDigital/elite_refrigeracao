@@ -4,7 +4,7 @@ import logo from '../assets/logo.png';
 import Icon from './Icon.astro';
 import { site, whatsappUrl } from '../data/site';
 import { servicos } from '../data/servicos';
-import { bairros, bairroPath } from '../data/bairros';
+import { regioes, regiaoLabel } from '../data/bairros';
 
 const year = new Date().getFullYear();
 ---
@@ -28,9 +28,9 @@ const year = new Date().getFullYear();
       </ul>
     </div>
     <div>
-      <h2 class="footer-title">Conserto de geladeira por bairro</h2>
-      <ul class="footer-links footer-bairros">
-        {bairros.map((b) => <li><a href={bairroPath(b)}>{b.nome}</a></li>)}
+      <h2 class="footer-title">Conserto de geladeira por região</h2>
+      <ul class="footer-links">
+        {regioes.map((r) => <li><a href={`/areas-atendidas/#${r.id}`}>{regiaoLabel(r)}</a></li>)}
       </ul>
       <h2 class="footer-title">Conteúdo</h2>
       <ul class="footer-links">

@@ -5,51 +5,57 @@ import CtaButtons from '../components/CtaButtons.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
-import { bairrosPorZona, bairroPath, zonasPrioritarias } from '../data/bairros';
+import { bairros, bairrosPorRegiao, bairroPath, regiaoLabel } from '../data/bairros';
 import { breadcrumbSchema } from '../data/schema';
 
 const crumbs = [
   { name: 'Início', path: '/' },
   { name: 'Áreas atendidas', path: '/areas-atendidas/' },
 ];
+const grupos = bairrosPorRegiao();
 ---
 
 <Base
-  title={`Áreas Atendidas em Fortaleza | ${site.name}`}
-  description={`Conserto de geladeira, freezer e câmara fria 24 horas na Zona Leste, Centro, Zona Oeste e Zona Sul de Fortaleza. Chegamos em até ${site.arrivalMinutes} minutos.`}
+  title={`Áreas Atendidas: ${bairros.length} Bairros de Fortaleza | ${site.name}`}
+  description={`Conserto de geladeira, freezer e câmara fria 24 horas em ${bairros.length} bairros de Fortaleza, do Centro às Regionais I a VI. Chegamos em até ${site.arrivalMinutes} minutos.`}
   schema={[breadcrumbSchema(crumbs)]}
 >
   <section class="hero page-hero">
     <div class="container">
       <Breadcrumbs items={crumbs} />
       <span class="eyebrow">Áreas atendidas</span>
-      <h1>Conserto de geladeira em Fortaleza</h1>
-      <p class="hero-lead">Atendemos 24 horas, a domicílio, nos bairros abaixo. Encontre o seu.</p>
+      <h1>Conserto de geladeira em toda Fortaleza</h1>
+      <p class="hero-lead">
+        Atendemos 24 horas, a domicílio, em {bairros.length} bairros, do Centro às seis regionais. Encontre o seu bairro.
+      </p>
+      <nav class="regiao-atalhos" aria-label="Regiões">
+        {grupos.map((g) => <a href={`#${g.regiao.id}`}>{regiaoLabel(g.regiao)}</a>)}
+      </nav>
       <CtaButtons />
     </div>
   </section>
-  <section class="section section-soft">
-    <div class="container zones">
-      {
-        bairrosPorZona().map((g) => (
-          <div class:list={['zone', { 'is-priority': zonasPrioritarias.includes(g.zona) }]}>
-            <h2 style="font-size:1.6rem">
-              {g.zona}
-              {zonasPrioritarias.includes(g.zona) && <span class="tag">Foco</span>}
-            </h2>
-            <ul>
-              {g.bairros.map((b) => (
-                <li>
-                  <a href={bairroPath(b)}>
-                    <Icon name="pin" size={16} /> {b.nome}
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+  {
+    grupos.map((g, i) => (
+      <section class:list={['section', 'regiao-bloco', { 'section-soft': i % 2 === 0 }]} id={g.regiao.id}>
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow">{g.bairros.length} {g.bairros.length === 1 ? 'bairro' : 'bairros'}</span>
+            <h2>{regiaoLabel(g.regiao)}</h2>
+            <p>{g.regiao.descricao}</p>
           </div>
-        ))
-      }
-    </div>
-  </section>
+          <ul class="bairro-grid">
+            {g.bairros.map((b) => (
+              <li>
+                <a href={bairroPath(b)}>
+                  <Icon name="pin" size={16} /> Conserto de geladeira em {b.nome}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
   <CtaBand />
 </Base>

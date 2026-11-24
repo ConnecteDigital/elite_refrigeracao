@@ -4,9 +4,9 @@ import logo from '../assets/logo-marca.png';
 import Icon from './Icon.astro';
 import { site, whatsappUrl } from '../data/site';
 import { servicos } from '../data/servicos';
-import { bairrosPorZona, bairroPath } from '../data/bairros';
+import { bairrosPorRegiao, bairroPath } from '../data/bairros';
 
-const zonas = bairrosPorZona();
+const grupos = bairrosPorRegiao();
 ---
 
 <header class="site-header">
@@ -38,18 +38,20 @@ const zonas = bairrosPorZona();
       <div class="nav-item has-sub">
         <a href="/areas-atendidas/" aria-haspopup="true">Áreas atendidas <span class="caret" aria-hidden="true"></span></a>
         <div class="submenu submenu-areas">
-          <div class="submenu-zonas">
-            {zonas.map((g) => (
-              <div>
-                <p class="submenu-zona">{g.zona}</p>
-                <ul>
-                  {g.bairros.map((b) => (
-                    <li><a href={bairroPath(b)}>{b.nome}</a></li>
-                  ))}
-                </ul>
-              </div>
+          <ul class="submenu-regioes">
+            {grupos.map((g) => (
+              <li>
+                <a href={`/areas-atendidas/#${g.regiao.id}`}>
+                  <Icon name="pin" size={18} />
+                  <span>
+                    <strong>{g.regiao.nome}</strong>
+                    {g.regiao.id !== 'centro' && <> · {g.regiao.apelido}</>}
+                    <small>{g.bairros.length} {g.bairros.length === 1 ? 'bairro' : 'bairros'}</small>
+                  </span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
           <a class="submenu-all" href="/areas-atendidas/">Ver todas as áreas <Icon name="arrow" size={16} /></a>
         </div>
       </div>
@@ -75,13 +77,17 @@ const zonas = bairrosPorZona();
           <details class="mobile-sub">
             <summary>Áreas atendidas</summary>
             <ul>
-              {zonas.map((g) => (
-                <>
-                  <li class="mobile-zona">{g.zona}</li>
-                  {g.bairros.map((b) => (
-                    <li><a href={bairroPath(b)}><Icon name="pin" size={16} /> {b.nome}</a></li>
-                  ))}
-                </>
+              {grupos.map((g) => (
+                <li>
+                  <details class="mobile-regiao">
+                    <summary>{g.regiao.nome}{g.regiao.id !== 'centro' && ` · ${g.regiao.apelido}`}</summary>
+                    <ul>
+                      {g.bairros.map((b) => (
+                        <li><a href={bairroPath(b)}><Icon name="pin" size={16} /> {b.nome}</a></li>
+                      ))}
+                    </ul>
+                  </details>
+                </li>
               ))}
               <li><a href="/areas-atendidas/"><strong>Ver todas as áreas</strong></a></li>
             </ul>

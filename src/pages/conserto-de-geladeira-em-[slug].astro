@@ -5,9 +5,18 @@ import CtaButtons from '../components/CtaButtons.astro';
 import CtaBand from '../components/CtaBand.astro';
 import FaqList from '../components/FaqList.astro';
 import ServiceCard from '../components/ServiceCard.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 import { servicos } from '../data/servicos';
-import { bairros, bairroPath, type Bairro } from '../data/bairros';
+import {
+  bairros,
+  bairroPath,
+  bairroPorNome,
+  getRegiao,
+  regiaoLabel,
+  type Bairro,
+  type Perfil,
+} from '../data/bairros';
 import { breadcrumbSchema, faqSchema, serviceSchema } from '../data/schema';
 
 export function getStaticPaths() {
@@ -19,48 +28,117 @@ interface Props {
 }
 
 const { bairro } = Astro.props;
+const nome = bairro.nome;
 const path = bairroPath(bairro);
-const regiao = bairro.zona === 'Centro' ? 'região central' : bairro.zona;
+const regiao = getRegiao(bairro.regiao);
+const regiaoTxt = regiaoLabel(regiao);
 const crumbs = [
   { name: 'Início', path: '/' },
   { name: 'Áreas atendidas', path: '/areas-atendidas/' },
-  { name: `Conserto de geladeira em ${bairro.nome}`, path },
+  { name: `Conserto de geladeira em ${nome}`, path },
 ];
+
+// O que mais aparece em cada tipo de bairro
+const problemas: Record<Perfil, string[]> = {
+  residencial: [
+    'Geladeira frost free que gela em cima e esquenta embaixo (gelo no evaporador ou resistência de degelo queimada)',
+    'Motor que liga e desliga sem parar, ou que estala e não parte (relé, protetor térmico ou compressor)',
+    'Borracha da porta ressecada, deixando o frio escapar e a conta de luz subir',
+    'Geladeira que parou depois de uma queda de energia',
+    'Freezer formando gelo demais ou deixando o sorvete mole',
+  ],
+  misto: [
+    'Geladeira de casa que não gela ou não liga',
+    'Freezer de lanchonete ou mercadinho que não congela direito',
+    'Vazamento de gás na tubulação, com a geladeira perdendo força aos poucos',
+    'Termostato ou sensor de temperatura com defeito, congelando tudo ou não desligando',
+    'Câmara fria de restaurante que não chega na temperatura',
+  ],
+  comercio: [
+    'Freezer de bebida que para justo no dia de mais movimento',
+    'Câmara fria que não baixa a temperatura ou forma gelo no evaporador',
+    'Expositor e balcão refrigerado com gelo acumulado ou porta sem vedar',
+    'Compressor sobrecarregado pelo uso contínuo, esquentando e desarmando',
+    'Geladeira de casa que parou de gelar',
+  ],
+  praia: [
+    'Vazamento de gás por corrosão da maresia nos tubos de cobre e nas soldas',
+    'Grade (condensador) de trás enferrujada, com a geladeira gelando cada vez menos',
+    'Geladeira que já recebeu gás e voltou a parar depois de alguns dias',
+    'Freezer de barraca, bar ou restaurante trabalhando sem parar no calor',
+    'Borracha da porta ressecada pelo sal e pela umidade',
+  ],
+};
+
+const perguntaExtra: Record<Perfil, { q: string; a: string }> = {
+  residencial: {
+    q: `Vocês consertam geladeira frost free em ${nome}?`,
+    a: `Sim. Em ${nome} atendemos geladeiras frost free e de degelo manual, de uma e duas portas, das marcas Brastemp, Consul, Electrolux, GE, Bosch, Mabe, LG e Samsung.`,
+  },
+  misto: {
+    q: `Atendem casa e comércio em ${nome}?`,
+    a: `Sim. Em ${nome} atendemos geladeiras de casa e também freezers, expositores e câmaras frias de lanchonetes, mercadinhos e restaurantes.`,
+  },
+  comercio: {
+    q: `Atendem câmara fria e freezer de comércio em ${nome} fora do horário comercial?`,
+    a: `Sim. O atendimento é 24 horas, inclusive à noite, fins de semana e feriados, para o seu comércio em ${nome} não perder mercadoria.`,
+  },
+  praia: {
+    q: `A maresia de ${nome} estraga a geladeira?`,
+    a: `A maresia acelera a corrosão dos tubos de cobre, das soldas e da grade de trás, o que causa vazamento de gás. Localizamos o vazamento, fazemos a solda e a recarga de gás com laudo.`,
+  },
+};
+
 const faq = [
   {
-    q: `Vocês atendem em ${bairro.nome} 24 horas?`,
-    a: `Sim. Atendemos ${bairro.nome} e bairros vizinhos 24 horas por dia, inclusive fins de semana e feriados.`,
+    q: `Vocês atendem em ${nome} 24 horas?`,
+    a: `Sim. Atendemos ${nome} 24 horas por dia, inclusive à noite, fins de semana e feriados.`,
   },
   {
-    q: `Em quanto tempo o técnico chega em ${bairro.nome}?`,
-    a: `Chegamos em até ${site.arrivalMinutes} minutos em ${bairro.nome}.`,
+    q: `Em quanto tempo o técnico chega em ${nome}?`,
+    a: `Chegamos em até ${site.arrivalMinutes} minutos em ${nome}.`,
   },
+  perguntaExtra[bairro.perfil],
   {
     q: `Atendem também ${bairro.vizinhos.slice(0, 2).join(' e ')}?`,
-    a: `Sim. Além de ${bairro.nome}, atendemos ${bairro.vizinhos.join(', ')} e toda a ${regiao} de Fortaleza.`,
+    a: `Sim. Além de ${nome}, atendemos ${bairro.vizinhos.join(', ')} e todos os bairros da ${regiaoTxt} de Fortaleza.`,
   },
   {
     q: 'O serviço tem garantia?',
     a: `Sim. Todos os serviços da ${site.name} têm ${site.warranty} de garantia.`,
   },
+  {
+    q: 'Quais as formas de pagamento?',
+    a: 'Aceitamos todas as formas de pagamento.',
+  },
 ];
-const outrosBairros = bairros.filter((b) => b.slug !== bairro.slug);
-const msg = `Olá! Vim pelo site da ${site.name} e preciso de conserto de geladeira em ${bairro.nome}.`;
+
+const vizinhos = bairro.vizinhos.map((n) => ({ nome: n, bairro: bairroPorNome(n) }));
+const mesmaRegiao = bairros
+  .filter((b) => b.regiao === bairro.regiao && b.slug !== bairro.slug)
+  .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+const msg = `Olá! Vim pelo site da ${site.name} e preciso de conserto de geladeira em ${nome}.`;
 const geladeira = servicos[0];
+const extraDescricao: Record<Perfil, string> = {
+  residencial: 'geladeira frost free, freezer e troca de compressor',
+  misto: 'geladeira, freezer e câmara fria de casa e comércio',
+  comercio: 'freezer, expositor e câmara fria de comércio',
+  praia: 'vazamento de gás por maresia, solda e carga de gás',
+};
 ---
 
 <Base
-  title={`Conserto de Geladeira em ${bairro.nome} 24h | ${site.name}`}
-  description={`Conserto de geladeira, freezer e câmara fria em ${bairro.nome}, Fortaleza. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos, com ${site.warranty} de garantia.`}
-  schema={[serviceSchema(geladeira, `${bairro.nome}, Fortaleza - CE`), faqSchema(faq), breadcrumbSchema(crumbs)]}
+  title={`Conserto de Geladeira em ${nome}, Fortaleza 24h | ${site.name}`}
+  description={`Conserto de geladeira em ${nome}, Fortaleza: ${extraDescricao[bairro.perfil]}. Atendimento 24h, chegamos em até ${site.arrivalMinutes} minutos e ${site.warranty} de garantia.`}
+  schema={[serviceSchema(geladeira, `${nome}, Fortaleza - CE`), faqSchema(faq), breadcrumbSchema(crumbs)]}
 >
   <section class="hero page-hero">
     <div class="container">
       <Breadcrumbs items={crumbs} />
-      <span class="eyebrow">{bairro.zona} · Fortaleza</span>
-      <h1>Conserto de geladeira em {bairro.nome} 24 horas</h1>
+      <span class="eyebrow">{regiaoTxt} · Fortaleza</span>
+      <h1>Conserto de geladeira em {nome} 24 horas</h1>
       <p class="hero-lead">
-        Geladeira, freezer ou câmara fria parou em {bairro.nome}? A {site.name} atende 24 horas e chega em até
+        Geladeira, freezer ou câmara fria parou em {nome}? A {site.name} atende 24 horas e chega em até
         {site.arrivalMinutes} minutos, com {site.warranty} de garantia.
       </p>
       <CtaButtons message={msg} />
@@ -70,38 +148,63 @@ const geladeira = servicos[0];
   <section class="section">
     <div class="container content-grid">
       <article class="prose">
-        <h2>Técnico de refrigeração em {bairro.nome}</h2>
+        <h2>Técnico de refrigeração em {nome}</h2>
         <p>{bairro.sobre}</p>
         <p>
-          Nossa equipe circula pela {regiao} e chega rápido em {bairro.nome} e nos bairros vizinhos, como
-          {bairro.vizinhos.join(', ')}. Assim que você chama, um técnico já sai para o endereço com manifold, solda e as
-          ferramentas para resolver.
+          {nome} fica na {regiaoTxt} de Fortaleza. Nossa equipe circula pela região e chega rápido em {nome} e nos
+          bairros próximos. Assim que você chama, um técnico já sai para o endereço com manifold, bomba de vácuo, solda e as
+          ferramentas para resolver no local.
         </p>
 
-        <h2>O que fazemos em {bairro.nome}</h2>
-        <ul>
-          <li>Conserto de geladeira de uma e duas portas, frost free e degelo manual</li>
-          <li>Conserto de freezer horizontal e vertical, de casa e de comércio</li>
-          <li>Conserto e manutenção de câmara fria</li>
-          <li>Troca de compressor (motor), termostato, sensor e resistência</li>
-          <li>Detecção de vazamento, solda e carga de gás com laudo</li>
-          <li>Troca de borracha de vedação da porta</li>
+        <h2>Problemas que mais atendemos em {nome}</h2>
+        <ul>{problemas[bairro.perfil].map((p) => <li>{p}</li>)}</ul>
+
+        <h2>Serviços de refrigeração em {nome}</h2>
+        <ul class="service-links">
+          {
+            servicos.map((s) => (
+              <li>
+                <a href={`/servicos/${s.slug}/`}>{s.nome}</a>: {s.resumo}
+              </li>
+            ))
+          }
         </ul>
 
-        <h2>Perguntas frequentes</h2>
+        <h2>Como funciona o atendimento em {nome}</h2>
+        <ol>
+          <li>Você chama no WhatsApp ou liga e conta o que está acontecendo (uma foto ou vídeo ajuda).</li>
+          <li>Um técnico sai na hora e chega em até {site.arrivalMinutes} minutos em {nome}.</li>
+          <li>Ele encontra o defeito, faz o conserto e testa o aparelho funcionando, com {site.warranty} de garantia.</li>
+        </ol>
+
+        <h2>Bairros próximos de {nome}</h2>
+        <p>
+          Também atendemos os bairros vizinhos de {nome}:
+          {
+            vizinhos.map((v, i) => (
+              <>
+                {v.bairro ? <a href={bairroPath(v.bairro)}>{v.nome}</a> : v.nome}
+                {i < vizinhos.length - 2 ? ', ' : i === vizinhos.length - 2 ? ' e ' : '.'}
+              </>
+            ))
+          }
+        </p>
+
+        <h2>Perguntas frequentes sobre conserto de geladeira em {nome}</h2>
         <FaqList items={faq} />
       </article>
 
       <aside class="sidebar">
         <div class="side-card">
-          <h2>Técnico em {bairro.nome} agora</h2>
+          <h2>Técnico em {nome} agora</h2>
           <p>Fale com a gente e receba atendimento em até {site.arrivalMinutes} minutos.</p>
           <CtaButtons message={msg} size="md" />
         </div>
         <div class="side-list">
-          <h2>Outros bairros</h2>
+          <h2>Outros bairros da {regiao.id === 'centro' ? 'região' : regiaoTxt}</h2>
           <ul>
-            {outrosBairros.map((b) => <li><a href={bairroPath(b)}>Conserto de geladeira em {b.nome}</a></li>)}
+            {mesmaRegiao.map((b) => <li><a href={bairroPath(b)}>{b.nome}</a></li>)}
+            <li><a href="/areas-atendidas/"><strong>Ver todos os bairros <Icon name="arrow" size={14} /></strong></a></li>
           </ul>
         </div>
       </aside>
@@ -111,8 +214,8 @@ const geladeira = servicos[0];
   <section class="section section-soft">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Serviços em {bairro.nome}</span>
-        <h2>Refrigeração em {bairro.nome}</h2>
+        <span class="eyebrow">Serviços em {nome}</span>
+        <h2>Refrigeração em {nome}</h2>
       </div>
       <div class="services-grid">
         {servicos.map((s) => <ServiceCard servico={s} />)}
@@ -120,5 +223,5 @@ const geladeira = servicos[0];
     </div>
   </section>
 
-  <CtaBand title={`Geladeira parada em ${bairro.nome}?`} message={msg} />
+  <CtaBand title={`Geladeira parada em ${nome}?`} message={msg} />
 </Base>
